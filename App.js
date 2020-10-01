@@ -1,18 +1,28 @@
 import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Text, View, Button } from "react-native";
 
 export default function App() {
+  const [name, setName] = useState("isaac");
+  const handleClick = () => {
+    setName("jojo");
+    setPerson({ name: "esther", age: "16" });
+  };
+  const [person, setPerson] = useState({ name: "gifty", age: 14 });
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.boldText}> It's time to have Fun!' </Text>
       </View>
       <View style={styles.body}>
-        <Text> lorem lipsum </Text>
-        <Text> lorem lipsum </Text>
-        <Text> lorem lipsum </Text>
-        <Text> lorem lipsum </Text>
+        <Text> My name is {name} </Text>
+        <Text>
+          My name is {person.name} and his age is {person.age}
+        </Text>
+      </View>
+      <View style={styles.btnContainer}>
+        <Button title="Update name" onPress={handleClick} />
       </View>
     </View>
   );
@@ -21,11 +31,12 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: "#369",
     alignItems: "center",
     justifyContent: "center",
   },
-  header: { backgroundColor: "pink", padding: 20 },
-  body: { backgroundColor: "yellow" },
+  header: { backgroundColor: "red", padding: 20 },
+  body: { backgroundColor: "yellow", marginTop: 20 },
   boldText: { fontWeight: "bold" },
+  btnContainer: { marginTop: 20 },
 });
