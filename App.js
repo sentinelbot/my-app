@@ -2,83 +2,75 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
   StyleSheet,
-  Text,
   View,
-  Button,
-  TextInput,
   FlatList,
-  ScrollView,
-  TouchableOpacity,
+  Alert,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
+import AddTodo from "./components/AddTodo";
+import Header from "./components/Header";
+import TodoItem from "./components/TodoItem";
 
 export default function App() {
-  const [people, setPeople] = useState([
-    { name: "isaac", id: "1" },
-    { name: "walter", id: "2" },
-    { name: "dede", id: "3" },
-    { name: "john", id: "4" },
-    { name: "lily", id: "5" },
+  const [todo, setTodo] = useState([
+    { text: "buy coffee", id: "1" },
+    { text: "buy laptop", id: "2" },
+    { text: "buy shoe", id: "3" },
   ]);
 
-  const clickHandler = (id) => {
-    console.log(id);
-    setPeople((prevPeople) => {
-      return prevPeople.filter((person) => person.id != id);
+  const presssHandler = (id) => {
+    setTodo((prevTodos) => {
+      return prevTodos.filter((todo) => todo.id != id);
     });
   };
 
-  return (
-    <View style={styles.container}>
-      <FlatList
-        numColumns={2}
-        keyExtractor={(item) => item.id}
-        data={people}
-        renderItem={({ item }) => (
-          <View style={styles.list}>
-            <TouchableOpacity
-              onPress={() => clickHandler(item.id)}
-              style={styles.button}
-            >
-              <Text>{item.name}</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      />
+  const submitHandler = (text) => {
+    if (text.length > 0) {
+      setTodo((prevTodos) => {
+        return [{ text: text, id: Math.random().toString() }, ...prevTodos];
+      });
+    } else {
+      Alert.alert("Oops!", "You can't add empty Todo");
+    }
+  };
 
-      {/* <ScrollView>
-        {people.map((item) => (
-          <View key={people.key} style={styles.list}>
-            <Text>{item.name}</Text>
+  return (
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+      }}
+    >
+      <View style={styles.container}>
+        {/**header */}
+        <Header />
+        <View style={styles.content}>
+          {/**todo form */}
+          <AddTodo submitHandler={submitHandler} />
+          <View style={styles.list}>
+            <FlatList
+              keyExtractor={(item) => item.id}
+              data={todo}
+              renderItem={({ item }) => {
+                return <TodoItem item={item} pressHandler={presssHandler} />;
+              }}
+            />
           </View>
-        ))}
-      </ScrollView> */}
-    </View>
+        </View>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#777",
-    paddingTop: 40,
-    paddingHorizontal: 20,
-    // alignItems: "center",
-    // justifyContent: "center",
+    backgroundColor: "#fff",
   },
   list: {
-    borderWidth: 1,
-    borderColor: "#369",
-    marginHorizontal: 20,
-    padding: 8,
-    marginTop: 80,
-    fontSize: 24,
-    backgroundColor: "pink",
+    marginTop: 20,
   },
-  button: {
+  content: {
     padding: 40,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: "green",
-    backgroundColor: "lightgreen",
   },
 });
